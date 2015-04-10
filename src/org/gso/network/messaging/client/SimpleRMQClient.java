@@ -30,7 +30,7 @@ public class SimpleRMQClient implements Runnable {
 			connection = factory.newConnection();
 			channel = connection.createChannel();
 			
-			channel.exchangeDeclare("imessage", "direct");
+			channel.exchangeDeclare("nfc_central", "direct");
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -44,7 +44,7 @@ public class SimpleRMQClient implements Runnable {
 	
 	public boolean publishMessage(String target, String message) {
 		try {
-			channel.basicPublish("imessage", target, null, (this.source + "@" + message).getBytes());
+			channel.basicPublish("nfc_central", target, null, (this.source + "@" + message).getBytes());
 			
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
@@ -57,7 +57,7 @@ public class SimpleRMQClient implements Runnable {
 	public void run() {
 		try {
 			String queueName = channel.queueDeclare().getQueue();
-			channel.queueBind(queueName, "imessage", "java");
+			channel.queueBind(queueName, "nfc_central", "java");
 			
 			QueueingConsumer consumer = new QueueingConsumer(channel);
 	        channel.basicConsume(queueName, true, consumer);
